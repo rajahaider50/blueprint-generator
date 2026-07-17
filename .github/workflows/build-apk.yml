@@ -25,7 +25,10 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
 
-    - name: Create Android Project
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v3
+
+    - name: Create Android Project Structure
       run: |
         mkdir -p app/src/main/java/com/rajahaider/blueprintgenerator
         mkdir -p app/src/main/res/layout
@@ -129,13 +132,17 @@ jobs:
         </resources>
         XML
 
-    - name: Create build.gradle
+    - name: Create build.gradle (app)
       run: |
         cat > app/build.gradle << 'GRADLE'
-        apply plugin: 'com.android.application'
+        plugins {
+            id 'com.android.application'
+        }
         
         android {
+            namespace 'com.rajahaider.blueprintgenerator'
             compileSdk 34
+        
             defaultConfig {
                 applicationId "com.rajahaider.blueprintgenerator"
                 minSdk 24
@@ -143,55 +150,64 @@ jobs:
                 versionCode 1
                 versionName "1.0"
             }
+        
+            buildTypes {
+                release {
+                    minifyEnabled false
+                }
+            }
+            
+            compileOptions {
+                sourceCompatibility JavaVersion.VERSION_1_8
+                targetCompatibility JavaVersion.VERSION_1_8
+            }
         }
         
         dependencies {
         }
         GRADLE
 
-    - name: Create Project build.gradle
+    - name: Create build.gradle (project)
       run: |
         cat > build.gradle << 'GRADLE'
-        buildscript {
-            repositories {
-                google()
-                mavenCentral()
-            }
-            dependencies {
-                classpath 'com.android.tools.build:gradle:8.1.0'
-            }
-        }
-        
-        allprojects {
-            repositories {
-                google()
-                mavenCentral()
-            }
+        plugins {
+            id 'com.android.application' version '8.1.0' apply false
         }
         GRADLE
 
     - name: Create settings.gradle
       run: |
-        echo 'rootProject.name = "BlueprintGenerator"' > settings.gradle
-        echo 'include ':app'' >> settings.gradle
+        cat > settings.gradle << 'SETTINGS'
+        pluginManagement {
+            repositories {
+                gradlePluginPortal()
+                google()
+                mavenCentral()
+            }
+        }
+        dependencyResolutionManagement {
+            repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+            repositories {
+                google()
+                mavenCentral()
+            }
+        }
+        rootProject.name = "BlueprintGenerator"
+        include ':app'
+        SETTINGS
 
     - name: Create gradle.properties
       run: |
-        echo 'android.useAndroidX=true' > gradle.properties
-        echo 'org.gradle.jvmargs=-Xmx2048m' >> gradle.properties
-
-    - name: Generate Gradle Wrapper
-      run: |
-        gradle wrapper --gradle-version 8.2
-
-    - name: Make gradlew executable
-      run: chmod +x gradlew
+        cat > gradle.properties << 'PROPS'
+        android.useAndroidX=true
+        org.gradle.jvmargs=-Xmx2048m
+        PROPS
 
     - name: Build Debug APK
-      run: ./gradlew assembleDebug --no-daemon
+      run: gradle assembleDebug --no-daemon
 
     - name: Build Release APK
-      run: ./gradlew assembleRelease --no-daemon
+      run: gradle assembleRelease --no-daemon
 
     - name: Check APK Output
       run: |
