@@ -16,6 +16,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
     - name: Setup Java
       uses: actions/setup-java@v4
       with:
@@ -28,21 +33,21 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v3
 
-    - name: Create Android Project Structure
+    - name: Create Android Project
       run: |
         mkdir -p app/src/main/java/com/rajahaider/blueprintgenerator
         mkdir -p app/src/main/res/layout
         mkdir -p app/src/main/res/values
         mkdir -p app/src/main/assets
         
-        # Copy website to assets
         cp index.html app/src/main/assets/
         cp -r css app/src/main/assets/
         cp -r js app/src/main/assets/
 
-    - name: Create AndroidManifest.xml
+    - name: Create All Android Files
       run: |
-        cat > app/src/main/AndroidManifest.xml << 'MANIFEST'
+        # AndroidManifest.xml
+        cat > app/src/main/AndroidManifest.xml << 'EOF'
         <?xml version="1.0" encoding="utf-8"?>
         <manifest xmlns:android="http://schemas.android.com/apk/res/android"
             package="com.rajahaider.blueprintgenerator">
@@ -63,13 +68,11 @@ jobs:
                 </activity>
             </application>
         </manifest>
-        MANIFEST
+        EOF
 
-    - name: Create MainActivity.java
-      run: |
-        cat > app/src/main/java/com/rajahaider/blueprintgenerator/MainActivity.java << 'JAVA'
+        # MainActivity.java
+        cat > app/src/main/java/com/rajahaider/blueprintgenerator/MainActivity.java << 'EOF'
         package com.rajahaider.blueprintgenerator;
-        
         import android.app.Activity;
         import android.os.Bundle;
         import android.view.Window;
@@ -77,18 +80,14 @@ jobs:
         import android.webkit.WebSettings;
         import android.webkit.WebView;
         import android.webkit.WebViewClient;
-        
         public class MainActivity extends Activity {
             private WebView webView;
-            
             @Override
             protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
                 requestWindowFeature(Window.FEATURE_NO_TITLE);
-                getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
                 setContentView(R.layout.activity_main);
-                
                 webView = findViewById(R.id.webView);
                 WebSettings settings = webView.getSettings();
                 settings.setJavaScriptEnabled(true);
@@ -96,18 +95,16 @@ jobs:
                 webView.setWebViewClient(new WebViewClient());
                 webView.loadUrl("file:///android_asset/index.html");
             }
-            
             @Override
             public void onBackPressed() {
                 if (webView.canGoBack()) webView.goBack();
                 else super.onBackPressed();
             }
         }
-        JAVA
+        EOF
 
-    - name: Create Layout
-      run: |
-        cat > app/src/main/res/layout/activity_main.xml << 'XML'
+        # activity_main.xml
+        cat > app/src/main/res/layout/activity_main.xml << 'EOF'
         <?xml version="1.0" encoding="utf-8"?>
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
@@ -118,11 +115,10 @@ jobs:
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </RelativeLayout>
-        XML
+        EOF
 
-    - name: Create Styles
-      run: |
-        cat > app/src/main/res/values/styles.xml << 'XML'
+        # styles.xml
+        cat > app/src/main/res/values/styles.xml << 'EOF'
         <?xml version="1.0" encoding="utf-8"?>
         <resources>
             <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar">
@@ -130,19 +126,16 @@ jobs:
                 <item name="android:navigationBarColor">#0F0F1A</item>
             </style>
         </resources>
-        XML
+        EOF
 
-    - name: Create build.gradle (app)
-      run: |
-        cat > app/build.gradle << 'GRADLE'
+        # app/build.gradle
+        cat > app/build.gradle << 'EOF'
         plugins {
             id 'com.android.application'
         }
-        
         android {
             namespace 'com.rajahaider.blueprintgenerator'
             compileSdk 34
-        
             defaultConfig {
                 applicationId "com.rajahaider.blueprintgenerator"
                 minSdk 24
@@ -150,34 +143,29 @@ jobs:
                 versionCode 1
                 versionName "1.0"
             }
-        
             buildTypes {
                 release {
                     minifyEnabled false
                 }
             }
-            
             compileOptions {
                 sourceCompatibility JavaVersion.VERSION_1_8
                 targetCompatibility JavaVersion.VERSION_1_8
             }
         }
-        
         dependencies {
         }
-        GRADLE
+        EOF
 
-    - name: Create build.gradle (project)
-      run: |
-        cat > build.gradle << 'GRADLE'
+        # build.gradle (root)
+        cat > build.gradle << 'EOF'
         plugins {
             id 'com.android.application' version '8.1.0' apply false
         }
-        GRADLE
+        EOF
 
-    - name: Create settings.gradle
-      run: |
-        cat > settings.gradle << 'SETTINGS'
+        # settings.gradle
+        cat > settings.gradle << 'EOF'
         pluginManagement {
             repositories {
                 gradlePluginPortal()
@@ -194,29 +182,28 @@ jobs:
         }
         rootProject.name = "BlueprintGenerator"
         include ':app'
-        SETTINGS
+        EOF
 
-    - name: Create gradle.properties
-      run: |
-        cat > gradle.properties << 'PROPS'
+        # gradle.properties
+        cat > gradle.properties << 'EOF'
         android.useAndroidX=true
         org.gradle.jvmargs=-Xmx2048m
-        PROPS
+        EOF
 
     - name: Build Debug APK
-      run: gradle assembleDebug --no-daemon
+      run: gradle assembleDebug --no-daemon --stacktrace
 
-    - name: Build Release APK
-      run: gradle assembleRelease --no-daemon
+    - name: Build Release APK  
+      run: gradle assembleRelease --no-daemon --stacktrace
 
-    - name: Check APK Output
+    - name: Verify APK Files
       run: |
-        echo "=== Checking APK files ==="
+        echo "=== APK Files ==="
         find . -name "*.apk" -type f
-        echo "=== Debug APK ==="
-        ls -la app/build/outputs/apk/debug/ || echo "Not found"
-        echo "=== Release APK ==="
-        ls -la app/build/outputs/apk/release/ || echo "Not found"
+        echo "=== Debug Directory ==="
+        ls -la app/build/outputs/apk/debug/ 2>/dev/null || echo "Not found"
+        echo "=== Release Directory ==="
+        ls -la app/build/outputs/apk/release/ 2>/dev/null || echo "Not found"
 
     - name: Upload Debug APK
       uses: actions/upload-artifact@v4
@@ -239,13 +226,16 @@ jobs:
         body: |
           ## Blueprint Generator APK
           
-          Download APK from artifacts or releases section.
+          ### Download
+          - **Blueprint-Generator-Debug.apk** - Testing
+          - **Blueprint-Generator-Release.apk** - Production
           
           ### Features
           - 8-Step form wizard
           - Dark/Light theme
           - Auto-save
           - File download
+          - AI prompt generation
         files: |
           app/build/outputs/apk/debug/app-debug.apk
           app/build/outputs/apk/release/app-release-unsigned.apk
