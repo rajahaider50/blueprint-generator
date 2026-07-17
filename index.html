@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blueprint Generator | Professional Project Creator</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div id="splash" class="splash">
+        <div class="splash-content">
+            <div class="logo-animation">
+                <i class="fas fa-rocket"></i>
+            </div>
+            <h1 class="splash-title">Blueprint Generator</h1>
+            <p class="splash-subtitle">Professional Project Creator</p>
+            <div class="loader">
+                <div class="loader-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app" class="app hidden">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-layer-group"></i>
+                    <span>Blueprint Generator</span>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-icon" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-steps">
+                <div class="step active" data-step="1">
+                    <i class="fas fa-user"></i>
+                    <span>Client</span>
+                </div>
+                <div class="step" data-step="2">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>Project</span>
+                </div>
+                <div class="step" data-step="3">
+                    <i class="fas fa-palette"></i>
+                    <span>Design</span>
+                </div>
+                <div class="step" data-step="4">
+                    <i class="fas fa-database"></i>
+                    <span>Database</span>
+                </div>
+                <div class="step" data-step="5">
+                    <i class="fas fa-plug"></i>
+                    <span>API</span>
+                </div>
+                <div class="step" data-step="6">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Security</span>
+                </div>
+                <div class="step" data-step="7">
+                    <i class="fas fa-rocket"></i>
+                    <span>Deploy</span>
+                </div>
+                <div class="step" data-step="8">
+                    <i class="fas fa-download"></i>
+                    <span>Generate</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Container -->
+        <main class="main-content">
+            <form id="blueprintForm">
+                <!-- Step 1: Client Info -->
+                <section class="form-section active" data-section="1">
+                    <div class="section-header">
+                        <i class="fas fa-user-tie"></i>
+                        <h2>Client Information</h2>
+                        <p>Basic details about the client</p>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> Client Name *</label>
+                            <input type="text" name="clientName" required placeholder="Enter client name">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-building"></i> Business Name</label>
+                            <input type="text" name="businessName" placeholder="Company/Brand name">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-phone"></i> Contact Number *</label>
+                            <input type="tel" name="clientPhone" required placeholder="+92 300 1234567">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-envelope"></i> Email *</label>
+                            <input type="email" name="clientEmail" required placeholder="client@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fab fa-whatsapp"></i> WhatsApp</label>
+                            <input type="tel" name="clientWhatsapp" placeholder="+92 300 1234567">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-globe"></i> Timezone</label>
+                            <select name="timezone">
+                                <option value="PKT">PKT (Pakistan)</option>
+                                <option value="IST">IST (India)</option>
+                                <option value="GMT">GMT (UK)</option>
+                                <option value="EST">EST (USA)</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-industry"></i> Industry</label>
+                            <input type="text" name="industry" placeholder="e.g., Fashion, Food, Education">
+                        </div>
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-users"></i> Target Audience</label>
+                            <textarea name="targetAudience" placeholder="Who are their customers?"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-money-bill-wave"></i> Budget</label>
+                            <input type="text" name="budget" placeholder="e.g., PKR 50,000">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar"></i> Deadline</label>
+                            <input type="date" name="deadline">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 2: Project Info -->
+                <section class="form-section" data-section="2">
+                    <div class="section-header">
+                        <i class="fas fa-project-diagram"></i>
+                        <h2>Project Details</h2>
+                        <p>Information about the project</p>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label><i class="fas fa-tag"></i> Project Name *</label>
+                            <input type="text" name="projectName" required placeholder="Enter project name">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-mobile-alt"></i> App Name</label>
+                            <input type="text" name="appName" placeholder="Display name in app store">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-code"></i> Package Name</label>
+                            <input type="text" name="packageName" placeholder="com.company.appname">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-tag"></i> Version</label>
+                            <input type="text" name="version" value="1.0.0" placeholder="1.0.0">
+                        </div>
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-list"></i> Project Type *</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="projectType" value="android-app" required>
+                                    <span class="radio-custom"></span>
+                                    <i class="fas fa-android"></i> Android App
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="projectType" value="web-app">
+                                    <span class="radio-custom"></span>
+                                    <i class="fas fa-globe"></i> Web App
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="projectType" value="ecommerce">
+                                    <span class="radio-custom"></span>
+                                    <i class="fas fa-shopping-cart"></i> E-commerce
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="projectType" value="both">
+                                    <span class="radio-custom"></span>
+                                    <i class="fas fa-layer-group"></i> App + Website
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-lightbulb"></i> Problem Statement *</label>
+                            <textarea name="problemStatement" required placeholder="What problem does this project solve?"></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-check-circle"></i> Solution</label>
+                            <textarea name="solution" placeholder="How does the project solve it?"></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-star"></i> Unique Selling Point</label>
+                            <textarea name="usp" placeholder="What makes this project different?"></textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 3: Features & Design -->
+                <section class="form-section" data-section="3">
+                    <div class="section-header">
+                        <i class="fas fa-palette"></i>
+                        <h2>Features & Design</h2>
+                        <p>App features and UI/UX design</p>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-list-ol"></i> Core Features (MVP) *</label>
+                            <textarea name="coreFeatures" required placeholder="List main features (one per line):
+- User Registration/Login
+- Profile Management
+- Dashboard
+- etc."></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-plus-circle"></i> Secondary Features</label>
+                            <textarea name="secondaryFeatures" placeholder="List secondary features (one per line)"></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-paint-brush"></i> Design Style</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="designStyle" value="material">
+                                    <span class="checkbox-custom"></span>
+                                    Material Design
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="designStyle" value="neumorphism">
+                                    <span class="checkbox-custom"></span>
+                                    Neumorphism
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="designStyle" value="flat">
+                                    <span class="checkbox-custom"></span>
+                                    Flat Design
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="designStyle" value="gradient">
+                                    <span class="checkbox-custom"></span>
+                                    Gradient
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-tint"></i> Primary Color</label>
+                            <div class="color-picker">
+                                <input type="color" name="primaryColor" value="#6C63FF">
+                                <span class="color-value">#6C63FF</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-tint"></i> Secondary Color</label>
+                            <div class="color-picker">
+                                <input type="color" name="secondaryColor" value="#FF6584">
+                                <span class="color-value">#FF6584</span>
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-image"></i> Design References</label>
+                            <textarea name="designReferences" placeholder="Paste links to design references (Dribbble, Behance, Figma)"></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-language"></i> Languages</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="languages" value="english" checked>
+                                    <span class="checkbox-custom"></span>
+                                    English
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="languages" value="urdu">
+                                    <span class="checkbox-custom"></span>
+                                    Urdu
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="languages" value="hindi">
+                                    <span class="checkbox-custom"></span>
+                                    Hindi
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="languages" value="arabic">
+                                    <span class="checkbox-custom"></span>
+                                    Arabic (RTL)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 4: Database -->
+                <section class="form-section" data-section="4">
+                    <div class="section-header">
+                        <i class="fas fa-database"></i>
+                        <h2>Database Design</h2>
+                        <p>Data structure and storage</p>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-server"></i> Database Type *</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="databaseType" value="firebase-rt" required>
+                                    <span class="radio-custom"></span>
+                                    <i class="fas fa-fire"></i> Firebase Realtime
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="databaseType" value="firebase-firestore">
+                                    <span class="radio-custom"></span>
+                                    <i class="fas fa-fire"></i> Firestore
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="databaseType" value="mysql">
+                                    <span class="radio-custom"></span>
+                                    <i class="fas fa-database"></i> MySQL
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="databaseType" value="postgresql">
+                                    <span class="radio-custom"></span>
+                                    <i class="fas fa-database"></i> PostgreSQL
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="databaseType" value="supabase">
+                                    <span class="radio-custom"></span>
+                                    <i class="fas fa-database"></i> Supabase
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-table"></i> Collections/Tables</label>
+                            <textarea name="databaseCollections" placeholder="List your data collections (one per line):
+Users - id, name, email, phone, avatar
+Products - id, name, price, description, image
+Orders - id, userId, products, total, status"></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-link"></i> Relationships</label>
+                            <textarea name="relationships" placeholder="Define relationships:
+Users 1:N Posts
+Posts 1:N Comments"></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-shield-alt"></i> Security Rules</label>
+                            <textarea name="securityRules" placeholder="Who can read/write/delete data?"></textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 5: API -->
+                <section class="form-section" data-section="5">
+                    <div class="section-header">
+                        <i class="fas fa-plug"></i>
+                        <h2>API Endpoints</h2>
+                        <p>Backend API configuration</p>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-server"></i> API Base URL</label>
+                            <input type="text" name="apiBaseUrl" placeholder="https://api.yourdomain.com/v1">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-key"></i> Authentication Type</label>
+                            <select name="authType">
+                                <option value="jwt">JWT Token</option>
+                                <option value="firebase">Firebase Auth</option>
+                                <option value="oauth">OAuth 2.0</option>
+                                <option value="apikey">API Key</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-tachometer-alt"></i> Rate Limiting</label>
+                            <input type="text" name="rateLimit" placeholder="100 requests/hour">
+                        </div>
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-code"></i> API Endpoints</label>
+                            <textarea name="apiEndpoints" rows="8" placeholder="List your API endpoints:
+GET /items - Get all items
+GET /items/:id - Get single item
+POST /items - Create item
+PUT /items/:id - Update item
+DELETE /items/:id - Delete item"></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-puzzle-piece"></i> Third-Party APIs</label>
+                            <textarea name="thirdPartyApis" placeholder="List third-party services:
+Firebase Auth - User authentication
+Google Maps - Location services
+Stripe - Payment processing"></textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 6: Security -->
+                <section class="form-section" data-section="6">
+                    <div class="section-header">
+                        <i class="fas fa-shield-alt"></i>
+                        <h2>Security</h2>
+                        <p>Security requirements and compliance</p>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-lock"></i> Security Features</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="securityFeatures" value="encryption">
+                                    <span class="checkbox-custom"></span>
+                                    Data Encryption
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="securityFeatures" value="ssl">
+                                    <span class="checkbox-custom"></span>
+                                    SSL/TLS
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="securityFeatures" value="2fa">
+                                    <span class="checkbox-custom"></span>
+                                    Two-Factor Auth
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="securityFeatures" value="biometric">
+                                    <span class="checkbox-custom"></span>
+                                    Biometric Login
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="securityFeatures" value="root-detect">
+                                    <span class="checkbox-custom"></span>
+                                    Root Detection
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="securityFeatures" value="screenshot-block">
+                                    <span class="checkbox-custom"></span>
+                                    Screenshot Prevention
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-clock"></i> Session Timeout</label>
+                            <select name="sessionTimeout">
+                                <option value="30">30 Minutes</option>
+                                <option value="60" selected>1 Hour</option>
+                                <option value="1440">24 Hours</option>
+                                <option value="never">Never</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-key"></i> Password Policy</label>
+                            <select name="passwordPolicy">
+                                <option value="basic">Basic (6+ chars)</option>
+                                <option value="medium" selected>Medium (8+ chars, 1 number)</option>
+                                <option value="strong">Strong (8+ chars, upper, lower, number, special)</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-file-contract"></i> Compliance</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="compliance" value="gdpr">
+                                    <span class="checkbox-custom"></span>
+                                    GDPR
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="compliance" value="privacy-policy">
+                                    <span class="checkbox-custom"></span>
+                                    Privacy Policy
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="compliance" value="terms">
+                                    <span class="checkbox-custom"></span>
+                                    Terms of Service
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 7: Deployment -->
+                <section class="form-section" data-section="7">
+                    <div class="section-header">
+                        <i class="fas fa-rocket"></i>
+                        <h2>Deployment</h2>
+                        <p>Hosting and deployment settings</p>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-cloud"></i> Hosting Platform *</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="hosting" value="github-pages" required>
+                                    <span class="radio-custom"></span>
+                                    <i class="fab fa-github"></i> GitHub Pages
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="hosting" value="cloudflare">
+                                    <span class="radio-custom"></span>
+                                    <i class="fas fa-cloud"></i> Cloudflare Pages
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="hosting" value="netlify">
+                                    <span class="radio-custom"></span>
+                                    <i class="fas fa-cloud"></i> Netlify
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="hosting" value="vercel">
+                                    <span class="radio-custom"></span>
+                                    <i class="fas fa-cloud"></i> Vercel
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="hosting" value="render">
+                                    <span class="radio-custom"></span>
+                                    <i class="fas fa-server"></i> Render
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="hosting" value="firebase-hosting">
+                                    <span class="radio-custom"></span>
+                                    <i class="fas fa-fire"></i> Firebase Hosting
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-globe"></i> Domain</label>
+                            <input type="text" name="domain" placeholder="yourdomain.com">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-code-branch"></i> Min SDK (Android)</label>
+                            <select name="minSdk">
+                                <option value="21">API 21 (Android 5.0)</option>
+                                <option value="23">API 23 (Android 6.0)</option>
+                                <option value="24">API 24 (Android 7.0)</option>
+                                <option value="26" selected>API 26 (Android 8.0)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-code-branch"></i> Target SDK</label>
+                            <select name="targetSdk">
+                                <option value="31">API 31 (Android 12)</option>
+                                <option value="32">API 32 (Android 12L)</option>
+                                <option value="33" selected>API 33 (Android 13)</option>
+                                <option value="34">API 34 (Android 14)</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-cogs"></i> CI/CD</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="cicd" value="github-actions" checked>
+                                    <span class="checkbox-custom"></span>
+                                    GitHub Actions
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="cicd" value="auto-deploy">
+                                    <span class="checkbox-custom"></span>
+                                    Auto Deploy on Push
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-money-bill"></i> Payment Integration</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="payment" value="cod">
+                                    <span class="checkbox-custom"></span>
+                                    Cash on Delivery
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="payment" value="jazzcash">
+                                    <span class="checkbox-custom"></span>
+                                    JazzCash
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="payment" value="easypaisa">
+                                    <span class="checkbox-custom"></span>
+                                    Easypaisa
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="payment" value="stripe">
+                                    <span class="checkbox-custom"></span>
+                                    Stripe
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="payment" value="paypal">
+                                    <span class="checkbox-custom"></span>
+                                    PayPal
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 8: Generate -->
+                <section class="form-section" data-section="8">
+                    <div class="section-header">
+                        <i class="fas fa-download"></i>
+                        <h2>Generate Blueprint</h2>
+                        <p>Review and download your project blueprint</p>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <div class="summary-card">
+                                <h3><i class="fas fa-clipboard-list"></i> Project Summary</h3>
+                                <div id="projectSummary" class="summary-content">
+                                    <!-- Filled by JS -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <div class="generate-options">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="includeAiPrompt" checked>
+                                    <span class="checkbox-custom"></span>
+                                    Include AI Code Generation Prompt
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="includeChecklist" checked>
+                                    <span class="checkbox-custom"></span>
+                                    Include Testing Checklist
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="includeDeployment" checked>
+                                    <span class="checkbox-custom"></span>
+                                    Include Deployment Guide
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <button type="button" class="btn-generate" id="generateBtn">
+                                <i class="fas fa-magic"></i>
+                                Generate Blueprint
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </form>
+        </main>
+
+        <!-- Navigation Buttons -->
+        <div class="nav-buttons">
+            <button type="button" class="btn btn-secondary" id="prevBtn" disabled>
+                <i class="fas fa-arrow-left"></i> Previous
+            </button>
+            <button type="button" class="btn btn-primary" id="nextBtn">
+                Next <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>Blueprint Generated!</h2>
+            <p>Your project blueprint has been downloaded successfully.</p>
+            <p class="modal-instruction">Send this file to AI to generate your complete codebase.</p>
+            <button class="btn btn-primary" id="closeModal">
+                <i class="fas fa-times"></i> Close
+            </button>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
