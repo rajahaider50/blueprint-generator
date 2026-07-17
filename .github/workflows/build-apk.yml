@@ -3,9 +3,6 @@ name: Build APK
 on:
   push:
     branches: [ main ]
-    paths:
-      - 'index.html'
-      - '.github/workflows/build-apk.yml'
   workflow_dispatch:
 
 permissions:
@@ -19,11 +16,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-
     - name: Setup Java
       uses: actions/setup-java@v4
       with:
@@ -33,66 +25,28 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
 
-    - name: Install Bubblewrap
-      run: npm install -g @nicedoc/nicedoc @nicedoc/nicedoc-cli bubblewrap-cli
-
-    - name: Create TWA Manifest
+    - name: Create Android Project
       run: |
-        cat > manifest.json << 'EOF'
-        {
-          "name": "Blueprint Generator",
-          "short_name": "Blueprint",
-          "start_url": "https://rajahaider50.github.io/blueprint-generator/",
-          "display": "standalone",
-          "background_color": "#0F0F1A",
-          "theme_color": "#6C63FF",
-          "icons": [
-            {
-              "src": "https://rajahaider50.github.io/blueprint-generator/assets/icon-192.png",
-              "sizes": "192x192",
-              "type": "image/png"
-            },
-            {
-              "src": "https://rajahaider50.github.io/blueprint-generator/assets/icon-512.png",
-              "sizes": "512x512",
-              "type": "image/png"
-            }
-          ]
-        }
-        EOF
-
-    - name: Build APK with Bubblewrap
-      run: |
-        mkdir -p android-app
-        cd android-app
-        
-        # Create a simple Android project
         mkdir -p app/src/main/java/com/rajahaider/blueprintgenerator
         mkdir -p app/src/main/res/layout
         mkdir -p app/src/main/res/values
-        mkdir -p app/src/main/res/drawable
         mkdir -p app/src/main/assets
         
-        # Copy website files
-        cp ../index.html app/src/main/assets/
-        cp -r ../css app/src/main/assets/
-        cp -r ../js app/src/main/assets/
+        # Copy website to assets
+        cp index.html app/src/main/assets/
+        cp -r css app/src/main/assets/
+        cp -r js app/src/main/assets/
 
-    - name: Create Android Project
+    - name: Create AndroidManifest.xml
       run: |
-        cd android-app
-        
-        # AndroidManifest.xml
-        cat > app/src/main/AndroidManifest.xml << 'EOF'
+        cat > app/src/main/AndroidManifest.xml << 'MANIFEST'
         <?xml version="1.0" encoding="utf-8"?>
         <manifest xmlns:android="http://schemas.android.com/apk/res/android"
             package="com.rajahaider.blueprintgenerator">
             <uses-permission android:name="android.permission.INTERNET" />
             <application
                 android:allowBackup="true"
-                android:icon="@mipmap/ic_launcher"
                 android:label="Blueprint Generator"
-                android:supportsRtl="true"
                 android:theme="@style/AppTheme"
                 android:usesCleartextTraffic="true">
                 <activity
@@ -106,10 +60,11 @@ jobs:
                 </activity>
             </application>
         </manifest>
-        EOF
+        MANIFEST
 
-        # MainActivity.java
-        cat > app/src/main/java/com/rajahaider/blueprintgenerator/MainActivity.java << 'EOF'
+    - name: Create MainActivity.java
+      run: |
+        cat > app/src/main/java/com/rajahaider/blueprintgenerator/MainActivity.java << 'JAVA'
         package com.rajahaider.blueprintgenerator;
         
         import android.app.Activity;
@@ -145,10 +100,11 @@ jobs:
                 else super.onBackPressed();
             }
         }
-        EOF
+        JAVA
 
-        # activity_main.xml
-        cat > app/src/main/res/layout/activity_main.xml << 'EOF'
+    - name: Create Layout
+      run: |
+        cat > app/src/main/res/layout/activity_main.xml << 'XML'
         <?xml version="1.0" encoding="utf-8"?>
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
@@ -159,10 +115,11 @@ jobs:
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </RelativeLayout>
-        EOF
+        XML
 
-        # styles.xml
-        cat > app/src/main/res/values/styles.xml << 'EOF'
+    - name: Create Styles
+      run: |
+        cat > app/src/main/res/values/styles.xml << 'XML'
         <?xml version="1.0" encoding="utf-8"?>
         <resources>
             <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar">
@@ -170,10 +127,11 @@ jobs:
                 <item name="android:navigationBarColor">#0F0F1A</item>
             </style>
         </resources>
-        EOF
+        XML
 
-        # build.gradle (app)
-        cat > app/build.gradle << 'EOF'
+    - name: Create build.gradle
+      run: |
+        cat > app/build.gradle << 'GRADLE'
         apply plugin: 'com.android.application'
         
         android {
@@ -185,20 +143,15 @@ jobs:
                 versionCode 1
                 versionName "1.0"
             }
-            buildTypes {
-                release {
-                    minifyEnabled false
-                }
-            }
         }
         
         dependencies {
-            implementation 'androidx.appcompat:appcompat:1.6.1'
         }
-        EOF
+        GRADLE
 
-        # build.gradle (project)
-        cat > build.gradle << 'EOF'
+    - name: Create Project build.gradle
+      run: |
+        cat > build.gradle << 'GRADLE'
         buildscript {
             repositories {
                 google()
@@ -215,56 +168,53 @@ jobs:
                 mavenCentral()
             }
         }
-        EOF
+        GRADLE
 
-        # settings.gradle
-        cat > settings.gradle << 'EOF'
-        rootProject.name = "BlueprintGenerator"
-        include ':app'
-        EOF
+    - name: Create settings.gradle
+      run: |
+        echo 'rootProject.name = "BlueprintGenerator"' > settings.gradle
+        echo 'include ':app'' >> settings.gradle
 
-        # gradle.properties
-        cat > gradle.properties << 'EOF'
-        android.useAndroidX=true
-        org.gradle.jvmargs=-Xmx2048m
-        EOF
+    - name: Create gradle.properties
+      run: |
+        echo 'android.useAndroidX=true' > gradle.properties
+        echo 'org.gradle.jvmargs=-Xmx2048m' >> gradle.properties
 
     - name: Generate Gradle Wrapper
-      working-directory: android-app
       run: |
         gradle wrapper --gradle-version 8.2
 
+    - name: Make gradlew executable
+      run: chmod +x gradlew
+
     - name: Build Debug APK
-      working-directory: android-app
-      run: |
-        chmod +x gradlew
-        ./gradlew assembleDebug --no-daemon
+      run: ./gradlew assembleDebug --no-daemon
 
     - name: Build Release APK
-      working-directory: android-app
-      run: |
-        ./gradlew assembleRelease --no-daemon
+      run: ./gradlew assembleRelease --no-daemon
 
-    - name: Check APK Files
+    - name: Check APK Output
       run: |
+        echo "=== Checking APK files ==="
+        find . -name "*.apk" -type f
         echo "=== Debug APK ==="
-        ls -la android-app/app/build/outputs/apk/debug/ || echo "Not found"
+        ls -la app/build/outputs/apk/debug/ || echo "Not found"
         echo "=== Release APK ==="
-        ls -la android-app/app/build/outputs/apk/release/ || echo "Not found"
+        ls -la app/build/outputs/apk/release/ || echo "Not found"
 
     - name: Upload Debug APK
       uses: actions/upload-artifact@v4
       with:
         name: Blueprint-Generator-Debug.apk
-        path: android-app/app/build/outputs/apk/debug/app-debug.apk
+        path: app/build/outputs/apk/debug/app-debug.apk
 
     - name: Upload Release APK
       uses: actions/upload-artifact@v4
       with:
         name: Blueprint-Generator-Release.apk
-        path: android-app/app/build/outputs/apk/release/app-release-unsigned.apk
+        path: app/build/outputs/apk/release/app-release-unsigned.apk
 
-    - name: Create GitHub Release
+    - name: Create Release
       uses: softprops/action-gh-release@v2
       if: github.ref == 'refs/heads/main'
       with:
@@ -273,21 +223,16 @@ jobs:
         body: |
           ## Blueprint Generator APK
           
-          Professional Blueprint Generator for creating project blueprints.
-          
-          ### Download
-          - **Blueprint-Generator-Debug.apk** - For testing
-          - **Blueprint-Generator-Release.apk** - For production
+          Download APK from artifacts or releases section.
           
           ### Features
           - 8-Step form wizard
           - Dark/Light theme
           - Auto-save
           - File download
-          - AI prompt generation
         files: |
-          android-app/app/build/outputs/apk/debug/app-debug.apk
-          android-app/app/build/outputs/apk/release/app-release-unsigned.apk
+          app/build/outputs/apk/debug/app-debug.apk
+          app/build/outputs/apk/release/app-release-unsigned.apk
         draft: false
         prerelease: false
       env:
